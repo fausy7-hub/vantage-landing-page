@@ -50,6 +50,11 @@ export default function Nav() {
               }} />
             </a>
           ))}
+          <a href="#staff" style={{
+            fontSize: '0.8125rem', fontWeight: 500, color: '#6E7681',
+          }}>
+            Staff login
+          </a>
           <a href="#consult" style={{
             background: '#2C3E4A', color: '#FAF7F3', padding: '11px 24px',
             borderRadius: 2, fontSize: '0.8125rem', fontWeight: 500, letterSpacing: '0.03em',
@@ -97,6 +102,11 @@ export default function Nav() {
             borderRadius: 2, fontSize: '0.875rem', fontWeight: 500, textAlign: 'center',
           }}>
             Book a consultation
+          </a>
+          <a href="#staff" onClick={() => setOpen(false)} style={{
+            fontSize: '0.8125rem', fontWeight: 500, color: '#6E7681', textAlign: 'center',
+          }}>
+            Staff login
           </a>
         </div>
       )}

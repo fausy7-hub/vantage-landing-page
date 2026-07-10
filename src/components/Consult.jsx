@@ -1,12 +1,34 @@
 import { useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 export default function Consult() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+
+    setSubmitting(true);
+    setError(null);
+
+    const { error: insertError } = await supabase.from('consultation_requests').insert({
+      name: form.name,
+      email: form.email,
+      phone: form.phone || null,
+      message: form.message || null,
+    });
+
+    setSubmitting(false);
+
+    if (insertError) {
+      console.error(insertError);
+      setError('Something went wrong — please try again or email us directly.');
+      return;
+    }
+
     setSubmitted(true);
   }
 
@@ -96,18 +118,25 @@ export default function Consult() {
               />
             </div>
 
-            <button type="submit" style={{
+            <button type="submit" disabled={submitting} style={{
               width: '100%', background: '#2C3E4A', color: '#FAF7F3',
               border: '1px solid #2C3E4A', padding: '16px 32px', borderRadius: 2,
               fontSize: '0.875rem', fontWeight: 500, letterSpacing: '0.04em',
-              cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+              cursor: submitting ? 'default' : 'pointer', fontFamily: 'Inter, sans-serif',
               transition: 'background 0.25s ease, transform 0.2s ease',
+              opacity: submitting ? 0.7 : 1,
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#3F5A6B'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseEnter={e => { if (!submitting) { e.currentTarget.style.background = '#3F5A6B'; e.currentTarget.style.transform = 'translateY(-2px)'; } }}
             onMouseLeave={e => { e.currentTarget.style.background = '#2C3E4A'; e.currentTarget.style.transform = 'none'; }}
             >
-              Request a consultation
+              {submitting ? 'Sending…' : 'Request a consultation'}
             </button>
+
+            {error && (
+              <p style={{ fontSize: '0.8125rem', color: '#B5605A', marginTop: 16, textAlign: 'center' }}>
+                {error}
+              </p>
+            )}
 
             <p style={{ fontSize: '0.8125rem', color: '#6E7681', marginTop: 16, textAlign: 'center' }}>
               We'll respond within one business day. Nothing is booked until we've spoken.
