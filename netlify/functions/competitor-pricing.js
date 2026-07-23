@@ -1,4 +1,24 @@
 const MAX_URLS = 5;
+const RATE_LIMIT = 8; // requests
+const RATE_WINDOW_MS = 10 * 60 * 1000; // per 10 minutes, per IP
+
+// In-memory per-instance counter. Resets on cold start and isn't shared across
+// concurrent instances — it's a deterrent against casual/scripted abuse of a
+// paid API, not a hard security boundary.
+const hits = new Map();
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const entry = hits.get(ip);
+
+  if (!entry || now - entry.windowStart > RATE_WINDOW_MS) {
+    hits.set(ip, { windowStart: now, count: 1 });
+    return false;
+  }
+
+  entry.count += 1;
+  return entry.count > RATE_LIMIT;
+}
 
 const SCHEMA = {
   type: 'object',
@@ -43,9 +63,26 @@ async function scrapeOne(url, apiKey) {
   return { url, services: data?.data?.json?.services ?? [] };
 }
 
-export default async (req) => {
+export default async (req, context) => {
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
+  }
+
+  // Only accept calls made from this site itself, not an arbitrary page or script
+  // that found the endpoint. Client-supplied headers can be spoofed by a determined
+  // caller, but this blocks casual/browser-driven cross-site abuse.
+  const origin = req.headers.get('origin');
+  if (origin) {
+    let originHost;
+    try { originHost = new URL(origin).host; } catch { originHost = null; }
+    if (originHost !== req.headers.get('host')) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 });
+    }
+  }
+
+  const ip = context?.ip || req.headers.get('x-nf-client-connection-ip') || 'unknown';
+  if (isRateLimited(ip)) {
+    return new Response(JSON.stringify({ error: 'Too many requests — try again in a few minutes' }), { status: 429 });
   }
 
   let body;
