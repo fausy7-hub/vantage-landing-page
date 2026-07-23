@@ -1,25 +1,5 @@
 import { useReveal } from '../hooks/useReveal';
-
-const cards = [
-  {
-    title: 'Aesthetics',
-    desc: 'Refined, natural results — designed to look like rest, not work.',
-    services: [
-      { name: 'Neuromodulator (per area)', price: '$300–450' },
-      { name: 'Dermal filler (per syringe)', price: '$650–900' },
-      { name: 'Biostimulator series', price: '$700–900/vial' },
-    ],
-  },
-  {
-    title: 'Longevity & Wellness',
-    desc: 'Energy, weight, and hormone support built on real lab work.',
-    services: [
-      { name: 'Executive wellness consult + labs', price: '$250–400' },
-      { name: 'Hormone optimization follow-up', price: '$150–250' },
-      { name: 'IV / vitamin therapy', price: '$50–150' },
-    ],
-  },
-];
+import { serviceCategories as cards } from '../data/services';
 
 export default function Services() {
   const headRef = useReveal();
@@ -85,6 +65,10 @@ export default function Services() {
             </div>
           ))}
         </div>
+
+        <p style={{ color: '#6E7681', fontSize: '0.8125rem', marginTop: 28, textAlign: 'center' }}>
+          Pricing is a general guide — your exact plan and cost are confirmed during your consultation.
+        </p>
       </div>
 
       <style>{`

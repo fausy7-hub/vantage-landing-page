@@ -5,11 +5,17 @@ export default function Consult() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', interest: '', message: '', company: '' });
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+
+    // Honeypot — real visitors never fill this hidden field.
+    if (form.company) {
+      setSubmitted(true);
+      return;
+    }
 
     setSubmitting(true);
     setError(null);
@@ -18,6 +24,7 @@ export default function Consult() {
       name: form.name,
       email: form.email,
       phone: form.phone || null,
+      interest: form.interest || null,
       message: form.message || null,
     });
 
@@ -102,6 +109,37 @@ export default function Consult() {
             ))}
 
             <div style={{ marginBottom: 20 }}>
+              <label htmlFor="interest" style={{
+                display: 'block', fontSize: '0.8125rem', fontWeight: 500,
+                color: '#2C3E4A', marginBottom: 8, letterSpacing: '0.02em',
+              }}>
+                What are you interested in? <span style={{ fontWeight: 400, color: '#6E7681' }}>(optional)</span>
+              </label>
+              <select
+                id="interest" name="interest"
+                value={form.interest}
+                onChange={e => setForm(f => ({ ...f, interest: e.target.value }))}
+                style={{ ...inputStyle, cursor: 'pointer' }}
+                onFocus={focusStyle} onBlur={blurStyle}
+              >
+                <option value="">Not sure yet</option>
+                <option value="Aesthetics">Aesthetics</option>
+                <option value="Longevity & Wellness">Longevity &amp; Wellness</option>
+                <option value="Maintenance Membership">Maintenance Membership</option>
+              </select>
+            </div>
+
+            {/* Honeypot field — hidden from real visitors, only bots fill it in */}
+            <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+              <label htmlFor="company">Company</label>
+              <input
+                id="company" name="company" type="text" tabIndex={-1} autoComplete="off"
+                value={form.company}
+                onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
+              />
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
               <label htmlFor="message" style={{
                 display: 'block', fontSize: '0.8125rem', fontWeight: 500,
                 color: '#2C3E4A', marginBottom: 8, letterSpacing: '0.02em',
@@ -139,7 +177,8 @@ export default function Consult() {
             )}
 
             <p style={{ fontSize: '0.8125rem', color: '#6E7681', marginTop: 16, textAlign: 'center' }}>
-              We'll respond within one business day. Nothing is booked until we've spoken.
+              We'll respond within one business day. Nothing is booked until we've spoken. By submitting, you agree to our{' '}
+              <a href="#privacy" style={{ color: '#3F5A6B', borderBottom: '1px solid #6B8E9E' }}>privacy policy</a>.
             </p>
           </form>
         ) : (

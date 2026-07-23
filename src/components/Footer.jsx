@@ -38,6 +38,7 @@ export default function Footer() {
                 color: '#6B8E9E', marginBottom: 16, fontWeight: 600,
               }}>Contact</h4>
               <p style={{ display: 'block', marginBottom: 10, color: 'rgba(250,247,243,0.6)' }}>Palm Beach Gardens, FL</p>
+              <p style={{ display: 'block', marginBottom: 10, color: 'rgba(250,247,243,0.6)' }}>By appointment</p>
               <a href="#consult" style={{
                 display: 'block', marginBottom: 10, color: 'rgba(250,247,243,0.6)',
                 transition: 'color 0.2s ease',
@@ -45,6 +46,22 @@ export default function Footer() {
               onMouseEnter={e => e.currentTarget.style.color = '#DDC4A0'}
               onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,243,0.6)'}
               >Book a consultation</a>
+            </div>
+            <div>
+              <h4 style={{
+                fontSize: '0.75rem', letterSpacing: '0.14em', textTransform: 'uppercase',
+                color: '#6B8E9E', marginBottom: 16, fontWeight: 600,
+              }}>Legal</h4>
+              <a href="#privacy" style={{
+                display: 'block', marginBottom: 10, color: 'rgba(250,247,243,0.6)',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = '#DDC4A0'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,243,0.6)'}
+              >Privacy policy</a>
+              <p style={{ display: 'block', color: 'rgba(250,247,243,0.4)', fontSize: '0.75rem', maxWidth: '20ch' }}>
+                Licensed Florida APRN — verification available on request
+              </p>
             </div>
           </div>
         </div>

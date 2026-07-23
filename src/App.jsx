@@ -2,14 +2,18 @@ import { useEffect, useState } from 'react'
 import './index.css'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
+import Trust from './components/Trust'
 import Recognition from './components/Recognition'
 import Approach from './components/Approach'
 import Services from './components/Services'
 import Membership from './components/Membership'
 import Provider from './components/Provider'
+import Testimonials from './components/Testimonials'
+import FAQ from './components/FAQ'
 import Consult from './components/Consult'
 import Footer from './components/Footer'
 import Staff from './components/Staff'
+import PrivacyPolicy from './components/PrivacyPolicy'
 
 export default function App() {
   const [hash, setHash] = useState(window.location.hash)
@@ -24,15 +28,22 @@ export default function App() {
     return <Staff />
   }
 
+  if (hash === '#privacy') {
+    return <PrivacyPolicy />
+  }
+
   return (
     <>
       <Nav />
       <Hero />
+      <Trust />
       <Recognition />
       <Approach />
       <Services />
       <Membership />
       <Provider />
+      <Testimonials />
+      <FAQ />
       <Consult />
       <Footer />
     </>
